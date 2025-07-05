@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { EnhancedLoadingSpinner } from "@/components/EnhancedLoadingSpinner";
 import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ResultSection } from "@/components/ResultSection";
@@ -16,8 +15,8 @@ import {
   User
 } from "lucide-react";
 import { DeveloperModal } from "@/components/DeveloperModal";
-import { AppHeader } from "@/components/Layout/AppHeader";
 import { AppFooter } from "@/components/Layout/AppFooter";
+import { HealthPrecautions } from "@/components/HealthPrecautions";
 import { PersonalSection } from "@/components/forms/PersonalSection";
 import { HealthSection } from "@/components/forms/HealthSection";
 import { LifestyleSection } from "@/components/forms/LifestyleSection";
@@ -25,6 +24,11 @@ import { ActivitySection } from "@/components/forms/ActivitySection";
 import { DietSection } from "@/components/forms/DietSection";
 import { CalculateSection } from "@/components/forms/CalculateSection";
 import { InitialAcknowledgment } from "@/components/InitialAcknowledgment";
+import { AppNavigation } from "@/components/Layout/AppNavigation";
+import { OverviewSection } from "@/components/sections/OverviewSection";
+import { HowItWorksSection } from "@/components/sections/HowItWorksSection";
+import { DisclaimerSection } from "@/components/sections/DisclaimerSection";
+import { ChatBot } from "@/components/ChatBot";
 
 const Index = () => {
   const { toast } = useToast();
@@ -39,6 +43,8 @@ const Index = () => {
   const [activeSection, setActiveSection] = useState("personal");
   const [showDeveloperModal, setShowDeveloperModal] = useState(false);
   const [sectionAnimation, setSectionAnimation] = useState(false);
+  const [currentView, setCurrentView] = useState<"home" | "about" | "calculator">("home");
+  const [scrollY, setScrollY] = useState(0);
   
   // Map of sections for navigation
   const sections = ["personal", "health", "lifestyle", "activity", "diet", "calculate"];
@@ -75,6 +81,13 @@ const Index = () => {
   
   const formRef = useRef<HTMLDivElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
+  
+  // Handle scroll for chatbot visibility
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
   
   // Set up section transitions
   useEffect(() => {
@@ -177,6 +190,20 @@ const Index = () => {
         title: "Thank you for acknowledging",
         description: "You can now proceed with the lifespan calculation.",
       });
+    }
+  };
+
+  const handleStartCalculation = () => {
+    setCurrentView("calculator");
+    setTimeout(() => {
+      formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 100);
+  };
+
+  const handleViewChange = (view: "home" | "about" | "calculator") => {
+    setCurrentView(view);
+    if (view !== "calculator") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
   
@@ -499,125 +526,155 @@ const Index = () => {
   };
   
   return (
-    <div className="page-container">
+    <div className="page-container min-h-screen">
       <EnhancedLoadingSpinner />
-      <ThemeToggle />
       
-      <AppHeader />
+      {/* Navigation */}
+      <AppNavigation 
+        activeSection={currentView} 
+        onSectionChange={handleViewChange} 
+      />
       
-      <main className="container mx-auto px-4 py-8 main-content">
-        <InitialAcknowledgment 
-          acknowledged={acknowledged}
-          handleAcknowledgmentChange={handleAcknowledgmentChange}
-        />
-        
-        <Tabs value={activeSection} onValueChange={setActiveSection}>
-          <TabsList className="mb-6 w-full overflow-x-auto flex flex-nowrap justify-start md:justify-center">
-            <TabsTrigger value="personal" className="flex items-center gap-1">
-              <User className="h-4 w-4" /> Personal
-            </TabsTrigger>
-            <TabsTrigger value="health" className="flex items-center gap-1">
-              <Heart className="h-4 w-4" /> Health
-            </TabsTrigger>
-            <TabsTrigger value="lifestyle" className="flex items-center gap-1">
-              <Dumbbell className="h-4 w-4" /> Lifestyle
-            </TabsTrigger>
-            <TabsTrigger value="activity" className="flex items-center gap-1">
-              <Timer className="h-4 w-4" /> Activity
-            </TabsTrigger>
-            <TabsTrigger value="diet" className="flex items-center gap-1">
-              <Utensils className="h-4 w-4" /> Diet
-            </TabsTrigger>
-            <TabsTrigger value="calculate" className="flex items-center gap-1">
-              <Calculator className="h-4 w-4" /> Calculate
-            </TabsTrigger>
-          </TabsList>
-          
-          <div ref={formRef}>
-            <TabsContent value="personal" className={`mt-0 ${sectionAnimation ? 'section-enter' : 'section-enter-active'}`}>
-              <PersonalSection 
-                formData={formData}
-                date={date}
-                setDate={setDate}
-                handleChange={handleChange}
-                handlePhotoUpload={handlePhotoUpload}
-                photoPreview={photoPreview}
-                handleNextSection={handleNextSection}
-              />
-            </TabsContent>
-            
-            <TabsContent value="health" className={`mt-0 ${sectionAnimation ? 'section-enter' : 'section-enter-active'}`}>
-              <HealthSection 
-                formData={formData}
-                handleChange={handleChange}
-                handleChronicConditionsChange={handleChronicConditionsChange}
-                handleFamilyHistoryChange={handleFamilyHistoryChange}
-                handleNextSection={handleNextSection}
-                handlePrevSection={handlePrevSection}
-              />
-            </TabsContent>
-            
-            <TabsContent value="lifestyle" className={`mt-0 ${sectionAnimation ? 'section-enter' : 'section-enter-active'}`}>
-              <LifestyleSection 
-                formData={formData}
-                handleChange={handleChange}
-                handleLifestyleChange={handleLifestyleChange}
-                handleNextSection={handleNextSection}
-                handlePrevSection={handlePrevSection}
-              />
-            </TabsContent>
-            
-            <TabsContent value="activity" className={`mt-0 ${sectionAnimation ? 'section-enter' : 'section-enter-active'}`}>
-              <ActivitySection 
-                formData={formData}
-                handleChange={handleChange}
-                handleNextSection={handleNextSection}
-                handlePrevSection={handlePrevSection}
-              />
-            </TabsContent>
-            
-            <TabsContent value="diet" className={`mt-0 ${sectionAnimation ? 'section-enter' : 'section-enter-active'}`}>
-              <DietSection 
-                formData={formData}
-                handleChange={handleChange}
-                handleNextSection={handleNextSection}
-                handlePrevSection={handlePrevSection}
-              />
-            </TabsContent>
-            
-            <TabsContent value="calculate" className={`mt-0 ${sectionAnimation ? 'section-enter' : 'section-enter-active'}`}>
-              <CalculateSection 
-                formData={formData}
-                handleChange={handleChange}
-                estimationType={estimationType}
-                setEstimationType={setEstimationType}
-                calculateLifespan={calculateLifespan}
-                loading={loading}
-                handlePrevSection={handlePrevSection}
-              />
-            </TabsContent>
-          </div>
-        </Tabs>
-        
-        {showResults && (
-          <div ref={resultsRef} className="mt-12 animate-fade-in">
-            <ResultSection 
-              result={result}
-              selectedData={selectedData}
-              photoPreview={photoPreview}
-              visible={showResults}
-            />
-            <HealthTips selectedData={selectedData} />
+      {/* ChatBot - only visible on home page and when not scrolled too far */}
+      <ChatBot isVisible={currentView === "home" && scrollY < 500} />
+      
+      {/* Content Sections */}
+      <div className="w-full">
+        {currentView === "home" && <OverviewSection onStartCalculation={handleStartCalculation} />}
+        {currentView === "about" && (
+          <div className="pt-20 px-4">
+            <HowItWorksSection />
+            <DisclaimerSection />
           </div>
         )}
         
-        <AppFooter setShowDeveloperModal={setShowDeveloperModal} />
-        
-        <DeveloperModal
-          open={showDeveloperModal}
-          onOpenChange={setShowDeveloperModal}
-        />
-      </main>
+        {currentView === "calculator" && (
+          <main className="container mx-auto px-4 py-8 main-content" style={{ paddingTop: '100px' }}>
+            <div className="max-w-4xl mx-auto">
+              <InitialAcknowledgment 
+                acknowledged={acknowledged}
+                handleAcknowledgmentChange={handleAcknowledgmentChange}
+              />
+              
+              <Tabs value={activeSection} onValueChange={setActiveSection}>
+                <div className="sticky-tabs">
+                  <TabsList className="mb-6 w-full overflow-x-auto flex flex-nowrap justify-start md:justify-center bg-background/95 backdrop-blur-md">
+                    <TabsTrigger value="personal" className="flex items-center gap-1 whitespace-nowrap">
+                      <User className="h-4 w-4" /> 
+                      <span className="hidden sm:inline">Personal</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="health" className="flex items-center gap-1 whitespace-nowrap">
+                      <Heart className="h-4 w-4" /> 
+                      <span className="hidden sm:inline">Health</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="lifestyle" className="flex items-center gap-1 whitespace-nowrap">
+                      <Dumbbell className="h-4 w-4" /> 
+                      <span className="hidden sm:inline">Lifestyle</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="activity" className="flex items-center gap-1 whitespace-nowrap">
+                      <Timer className="h-4 w-4" /> 
+                      <span className="hidden sm:inline">Activity</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="diet" className="flex items-center gap-1 whitespace-nowrap">
+                      <Utensils className="h-4 w-4" /> 
+                      <span className="hidden sm:inline">Diet</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="calculate" className="flex items-center gap-1 whitespace-nowrap">
+                      <Calculator className="h-4 w-4" /> 
+                      <span className="hidden sm:inline">Calculate</span>
+                    </TabsTrigger>
+                  </TabsList>
+                </div>
+                
+                <div ref={formRef} className="px-2 sm:px-0">
+                  <TabsContent value="personal" className={`mt-0 ${sectionAnimation ? 'section-enter' : 'section-enter-active'}`}>
+                    <PersonalSection 
+                      formData={formData}
+                      date={date}
+                      setDate={setDate}
+                      handleChange={handleChange}
+                      handlePhotoUpload={handlePhotoUpload}
+                      photoPreview={photoPreview}
+                      handleNextSection={handleNextSection}
+                    />
+                  </TabsContent>
+                  
+                  <TabsContent value="health" className={`mt-0 ${sectionAnimation ? 'section-enter' : 'section-enter-active'}`}>
+                    <HealthSection 
+                      formData={formData}
+                      handleChange={handleChange}
+                      handleChronicConditionsChange={handleChronicConditionsChange}
+                      handleFamilyHistoryChange={handleFamilyHistoryChange}
+                      handleNextSection={handleNextSection}
+                      handlePrevSection={handlePrevSection}
+                    />
+                  </TabsContent>
+                  
+                  <TabsContent value="lifestyle" className={`mt-0 ${sectionAnimation ? 'section-enter' : 'section-enter-active'}`}>
+                    <LifestyleSection 
+                      formData={formData}
+                      handleChange={handleChange}
+                      handleLifestyleChange={handleLifestyleChange}
+                      handleNextSection={handleNextSection}
+                      handlePrevSection={handlePrevSection}
+                    />
+                  </TabsContent>
+                  
+                  <TabsContent value="activity" className={`mt-0 ${sectionAnimation ? 'section-enter' : 'section-enter-active'}`}>
+                    <ActivitySection 
+                      formData={formData}
+                      handleChange={handleChange}
+                      handleNextSection={handleNextSection}
+                      handlePrevSection={handlePrevSection}
+                    />
+                  </TabsContent>
+                  
+                  <TabsContent value="diet" className={`mt-0 ${sectionAnimation ? 'section-enter' : 'section-enter-active'}`}>
+                    <DietSection 
+                      formData={formData}
+                      handleChange={handleChange}
+                      handleNextSection={handleNextSection}
+                      handlePrevSection={handlePrevSection}
+                    />
+                  </TabsContent>
+                  
+                  <TabsContent value="calculate" className={`mt-0 ${sectionAnimation ? 'section-enter' : 'section-enter-active'}`}>
+                    <CalculateSection 
+                      formData={formData}
+                      handleChange={handleChange}
+                      estimationType={estimationType}
+                      setEstimationType={setEstimationType}
+                      calculateLifespan={calculateLifespan}
+                      loading={loading}
+                      handlePrevSection={handlePrevSection}
+                    />
+                  </TabsContent>
+                </div>
+              </Tabs>
+              
+              {showResults && (
+                <div ref={resultsRef} className="mt-12 animate-fade-in px-2 sm:px-0">
+                  <ResultSection 
+                    result={result}
+                    selectedData={selectedData}
+                    photoPreview={photoPreview}
+                    visible={showResults}
+                  />
+                  <HealthTips selectedData={selectedData} />
+                  <HealthPrecautions selectedData={selectedData} />
+                </div>
+              )}
+            </div>
+          </main>
+        )}
+      </div>
+      
+      <AppFooter setShowDeveloperModal={setShowDeveloperModal} />
+      
+      <DeveloperModal
+        open={showDeveloperModal}
+        onOpenChange={setShowDeveloperModal}
+      />
     </div>
   );
 };

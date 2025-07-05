@@ -1,0 +1,142 @@
+
+/* Component-specific styles */
+.main-content {
+  animation: fade-in 0.5s ease-out;
+}
+
+/* Section transitions */
+.section-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.section-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+
+/* Enhanced form styling */
+.form-section {
+  background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--muted)/0.1) 100%);
+  backdrop-filter: blur(10px);
+  border: 1px solid hsl(var(--border));
+  box-shadow: 0 8px 32px hsla(var(--primary), 0.1);
+}
+
+/* Gradient backgrounds */
+.ice-blue-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.health-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
+}
+
+/* Loading animation */
+.loading-dots {
+  display: inline-block;
+}
+
+.loading-dots::after {
+  content: '';
+  animation: loading-dots 1.5s infinite;
+}
+
+@keyframes loading-dots {
+  0%, 20% { content: ''; }
+  40% { content: '.'; }
+  60% { content: '..'; }
+  80%, 100% { content: '...'; }
+}
+
+/* Card hover effects */
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px hsla(var(--primary), 0.15);
+}
+
+/* Button animations */
+.btn-pulse {
+  animation: btn-pulse 2s infinite;
+}
+
+@keyframes btn-pulse {
+  0% { box-shadow: 0 0 0 0 hsla(var(--primary), 0.7); }
+  70% { box-shadow: 0 0 0 10px hsla(var(--primary), 0); }
+  100% { box-shadow: 0 0 0 0 hsla(var(--primary), 0); }
+}
+
+/* Text animations */
+.text-shimmer {
+  background: linear-gradient(90deg, 
+    hsl(var(--foreground)) 0%, 
+    hsl(var(--primary)) 50%, 
+    hsl(var(--foreground)) 100%);
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { background-position: 200% 0; }
+  50% { background-position: -200% 0; }
+}
+
+/* Icons positioning - prevent scroll movement */
+.fixed-icons {
+  position: fixed !important;
+  z-index: 10;
+}
+
+.fixed-icons .icon-element {
+  position: absolute;
+  pointer-events: none;
+}
+
+/* Health journey button responsive */
+@media (max-width: 640px) {
+  .health-journey-btn {
+    width: 100%;
+    max-width: none;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  
+  .health-journey-btn span {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .health-journey-btn .icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
+
+/* Sticky navigation tabs */
+.sticky-tabs {
+  position: sticky !important;
+  top: 80px;
+  z-index: 40;
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.dark .sticky-tabs {
+  background: rgba(0, 0, 0, 0.95);
+}
+
+/* Mobile responsive fixes */
+@media (max-width: 640px) {
+  .sticky-tabs {
+    top: 70px;
+  }
+}

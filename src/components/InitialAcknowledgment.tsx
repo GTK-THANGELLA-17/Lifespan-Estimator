@@ -26,21 +26,62 @@ export function InitialAcknowledgment({
       <Card className="mb-8 border-l-4 border-l-amber-500 overflow-hidden relative bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/20">
         <motion.div 
           className="absolute -right-16 -top-16 w-32 h-32 bg-amber-200 dark:bg-amber-900/20 rounded-full opacity-20"
-          animate={{ scale: [1, 1.2, 1] }}
-          transition={{ duration: 8, repeat: Infinity }}
+          animate={{ 
+            scale: [1, 1.2, 1],
+            rotate: [0, 180, 360]
+          }}
+          transition={{ 
+            duration: 8, 
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
         />
+        <motion.div
+          animate={{ 
+            y: [0, -10, 0],
+            opacity: [0.5, 1, 0.5]
+          }}
+          transition={{ 
+            duration: 3, 
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          className="absolute top-2 right-2"
+        >
+          <AlertCircle className="h-6 w-6 text-amber-500" />
+        </motion.div>
         <CardContent className="pt-6 relative z-10">
           <div className="flex items-start">
             <div className="mr-3 flex-shrink-0">
               <motion.div
                 whileHover={{ rotate: 10 }}
+                animate={{ 
+                  boxShadow: [
+                    "0 0 10px rgba(245, 158, 11, 0.3)",
+                    "0 0 20px rgba(245, 158, 11, 0.6)",
+                    "0 0 10px rgba(245, 158, 11, 0.3)"
+                  ]
+                }}
+                transition={{ duration: 2, repeat: Infinity }}
                 className="bg-amber-100 dark:bg-amber-900/30 p-2 rounded-full"
               >
                 <Shield className="h-5 w-5 text-amber-500" />
               </motion.div>
             </div>
             <div className="space-y-3 flex-grow">
-              <h3 className="text-lg font-semibold">Acknowledge Here</h3>
+              <motion.h3 
+                className="text-lg font-semibold"
+                animate={{ 
+                  scale: [1, 1.02, 1]
+                }}
+                transition={{ 
+                  duration: 2, 
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              >
+                Acknowledge Here
+              </motion.h3>
               
               <motion.div 
                 className={`space-y-2 text-sm overflow-hidden`}
@@ -77,12 +118,28 @@ export function InitialAcknowledgment({
               )}
               
               <div className="flex items-center space-x-2 mt-4">
-                <motion.div whileTap={{ scale: 0.9 }}>
+                <motion.div 
+                  whileTap={{ scale: 0.9 }}
+                  animate={{ 
+                    y: [0, -2, 0],
+                    boxShadow: [
+                      "0 0 0 0 rgba(245, 158, 11, 0)",
+                      "0 0 0 4px rgba(245, 158, 11, 0.3)",
+                      "0 0 0 0 rgba(245, 158, 11, 0)"
+                    ]
+                  }}
+                  transition={{ 
+                    duration: 2, 
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                  className="rounded"
+                >
                   <Checkbox 
                     id="acknowledgment" 
                     checked={acknowledged} 
                     onCheckedChange={handleAcknowledgmentChange} 
-                    className="border-amber-500 data-[state=checked]:bg-amber-500 data-[state=checked]:text-amber-foreground"
+                    className="border-amber-500 data-[state=checked]:bg-amber-500 data-[state=checked]:text-amber-foreground transition-all duration-200"
                   />
                 </motion.div>
                 <Label 

@@ -3,7 +3,8 @@ import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ResultData } from "./ResultData"; 
 import { ResultCharts } from "./ResultCharts";
-import { PieChart, BarChart, User, Loader2, AreaChart, Image } from "lucide-react";
+import { EnhancedResultVisuals } from "../EnhancedResultVisuals";
+import { PieChart, BarChart, User, Loader2, AreaChart, Image, Target } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -63,14 +64,15 @@ export function ResultTabs({ result, selectedData, showCharts, photoPreview }: R
       </motion.div>
       
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid grid-cols-4 mb-4 relative overflow-hidden">
+        <TabsList className="grid grid-cols-5 mb-4 relative overflow-hidden">
           <motion.div 
             className="absolute h-full bg-primary/10 rounded-md z-0"
             animate={{ 
               left: activeTab === "result" ? "0%" : 
-                   activeTab === "chart" ? "25%" : 
-                   activeTab === "trends" ? "50%" : "75%",
-              width: "25%"
+                   activeTab === "chart" ? "20%" : 
+                   activeTab === "trends" ? "40%" : 
+                   activeTab === "visual" ? "60%" : "80%",
+              width: "20%"
             }}
             transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
           />
@@ -85,6 +87,9 @@ export function ResultTabs({ result, selectedData, showCharts, photoPreview }: R
           </TabsTrigger>
           <TabsTrigger value="visual" className="flex items-center gap-1 z-10">
             <Image className="h-4 w-4 text-purple-500" /> Visual
+          </TabsTrigger>
+          <TabsTrigger value="insights" className="flex items-center gap-1 z-10">
+            <Target className="h-4 w-4 text-indigo-500" /> Insights
           </TabsTrigger>
         </TabsList>
         
@@ -200,6 +205,37 @@ export function ResultTabs({ result, selectedData, showCharts, photoPreview }: R
                 ) : (
                   <div className="w-full overflow-x-hidden">
                     <ResultCharts selectedData={selectedData} showCharts={true} chartType="radar" />
+                  </div>
+                )}
+              </motion.div>
+            )}
+
+            {activeTab === "insights" && (
+              <motion.div
+                key="insights"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.3 }}
+                className="w-full"
+              >
+                {isLoading ? (
+                  <div className="text-center py-10">
+                    <motion.div 
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                      className="inline-block"
+                    >
+                      <Loader2 className="h-10 w-10 text-primary" />
+                    </motion.div>
+                    <div className="mt-4 space-y-3">
+                      <Skeleton className="h-6 w-32 mx-auto" />
+                      <Skeleton className="h-4 w-48 mx-auto" />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="w-full overflow-x-hidden">
+                    <EnhancedResultVisuals selectedData={selectedData} result={result} />
                   </div>
                 )}
               </motion.div>

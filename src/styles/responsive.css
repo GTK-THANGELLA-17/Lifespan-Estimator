@@ -1,0 +1,57 @@
+
+/* Responsive Navigation */
+@media (max-width: 640px) {
+  .fixed.top-4.left-1\/2 {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    right: 1rem;
+    transform: none;
+    border-radius: 0.75rem;
+  }
+}
+
+/* Chat Responsiveness */
+@media (max-width: 768px) {
+  .chat-window-mobile {
+    width: calc(100vw - 2rem) !important;
+    height: calc(100vh - 2rem) !important;
+    border-radius: 1rem !important;
+    top: 1rem !important;
+    left: 1rem !important;
+    right: 1rem !important;
+    bottom: 1rem !important;
+  }
+  
+  .chat-button-mobile {
+    bottom: 1.5rem !important;
+    right: 1.5rem !important;
+    width: 4rem !important;
+    height: 4rem !important;
+  }
+}
+
+/* Desktop Chat Positioning */
+@media (min-width: 769px) {
+  .chat-window-desktop {
+    max-height: calc(100vh - 8rem) !important;
+    top: auto !important;
+    bottom: 7rem !important;
+  }
+}
+
+/* Responsive Text */
+@media (max-width: 640px) {
+  .text-5xl { font-size: 2.5rem; }
+  .text-7xl { font-size: 3rem; }
+  .text-xl { font-size: 1.1rem; }
+  .text-2xl { font-size: 1.25rem; }
+}
+
+/* Prevent body scroll when chatbot is open on mobile */
+.chatbot-open-mobile {
+  overflow: hidden !important;
+  position: fixed !important;
+  width: 100% !important;
+  top: 0 !important;
+}

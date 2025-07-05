@@ -10,7 +10,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Github, Linkedin, Mail, Globe, Twitter } from "lucide-react";
+import { Github, Linkedin, Mail, Globe, Twitter,Instagram } from "lucide-react";
 
 export interface DeveloperModalProps {
   open: boolean;
@@ -20,6 +20,7 @@ export interface DeveloperModalProps {
 export function DeveloperModal({ open, onOpenChange }: DeveloperModalProps) {
   const developerLinks = [
     { icon: <Github className="h-4 w-4" />, label: "GitHub", url: "https://github.com" },
+     { icon: <Instagram className="h-4 w-4 text-pink-500" />, label: "Instagram", url: "https://instagram.com/g_tahngella_k" },
     { icon: <Linkedin className="h-4 w-4 text-blue-600" />, label: "LinkedIn", url: "https://www.linkedin.com/in/gthangella/" },
     { icon: <Twitter className="h-4 w-4 text-blue-400" />, label: "Twitter", url: "https://twitter.com/g_thangella" },
     { icon: <Mail className="h-4 w-4 text-red-500" />, label: "Email", url: "mailto:imgtk17@gmail.com" },
